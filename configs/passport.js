@@ -7,7 +7,7 @@ passport.use(
   new LocalStrategy(async (email, password, done) => {
     try {
       const user = await db.getEmail(email);
-      console.log("user");
+      console.log(user);
 
       if (!user) {
         return done(null, false, { message: "Incorrect Email" });

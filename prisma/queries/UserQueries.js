@@ -14,7 +14,7 @@ class UserQueries {
   }
 
   async getUser(id) {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
