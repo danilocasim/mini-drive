@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { addUser } = require("../controller/userController");
+const { addUser, logout } = require("../controller/userController");
 const passport = require("passport");
 
 const userRouter = Router();
@@ -13,5 +13,7 @@ userRouter.post(
     successRedirect: "/",
   })
 );
+
+userRouter.get("/logout", logout);
 
 module.exports = userRouter;

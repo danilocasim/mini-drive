@@ -5,3 +5,10 @@ module.exports.addUser = async (req, res) => {
   await db.addUser(data);
   res.redirect("/");
 };
+
+module.exports.logout = async (req, res, next) => {
+  req.logout((err) => {
+    if (err) next(err);
+    res.redirect("/");
+  });
+};
