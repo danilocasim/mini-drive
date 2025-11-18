@@ -7,7 +7,14 @@
   </head>
   <body>
     <h1>Homepage</h1>
+
+    <% if (locals.currentUser) {%>
+    <h1><%= currentUser.fullname%></h1>
+    <a href="/logout">Logout</a>
+    <% } else{ %>
+    <h1>Please Login First</h1>
     <a href="/login">Login</a>
     <a href="/signup">Signup</a>
+    <% } %>
   </body>
 </html>
