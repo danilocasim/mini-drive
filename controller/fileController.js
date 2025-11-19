@@ -38,7 +38,33 @@ module.exports.viewFolder = async (req, res) => {
   });
 };
 
+// FIX
 module.exports.addFile = async (req, res, next) => {
+  require("dotenv").config();
+  const { createClient } = require("@supabase/supabase-js");
+
+  const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
+  const supabaseKey = process.env.SUPABASE_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  supabase.storage
+    .from("obj")
+    .upload("public/avatar1.pdf", req.file, {
+      cacheControl: "3600",
+      upsert: false,
+    })
+    .then((data) => {
+      console.log(data);
+    });
+
+  supabase.storage
+    .from("obj")
+    .list()
+    .then((data) => {
+      console.log(data);
+    });
+  console.log(req.file);
+
   const { folderid } = req.params;
   const { id } = req.user;
   await db.addFile(req.file, folderid, id);
