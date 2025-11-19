@@ -8,6 +8,13 @@
   <body>
     <% if(locals.folder) { %>
 
+      <% if (locals.paths)  {%>
+        <a href="/"><%= currentUser.fullname %></a>
+        <% paths.forEach((path) => { %>
+        <a href="/folder/<%= path.id  %>"><%= path.name %></a>
+        <% }) %>
+      <% } %>
+
     <form action="/addFolder/<%= folder.id  %>" method="post">
       <label for="foldername">Add Folder</label>
       <input type="text" name="foldername" id="foldername" />
@@ -23,10 +30,16 @@
     </form>
     <h1><%= folder.name %></h1>
 
-    <% if (locals.folders){ %> <% folders.forEach((folder) => { %>
-    <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></a></button>
-    <% }) %> <% } %> <% if (locals.files) {%> <% files.forEach((file) => { %>
-    <B><%= file.name %></B>
-    <% }) %> <% } %> <% } %>
+    <% if (locals.storage){ %> <% storage.forEach((folder) => { %>
+      <% if (folder.type === "FOLDER") {%>
+    <a href="/folder/<%= folder.id  %>"><button>
+      <%= folder.name %></a></button>
+      <% } %>
+     <% if (folder.type === "FILE") {%>
+      <p><%= folder.name  %></p>
+      <% } %>
+    <% }) %> 
+    <% } %>
+     <% } %>
   </body>
 </html>

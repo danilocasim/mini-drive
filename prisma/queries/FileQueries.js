@@ -4,24 +4,24 @@ const prisma = new PrismaClient();
 
 class FileQueries {
   async addFolder(name, parentId = null, userId) {
-    if (parentId) {
-      await prisma.folder.create({
-        data: {
-          name: name,
-          userId: userId,
-          parentId: Number(parentId),
-        },
-      });
-    } else {
-      if (parentId) {
-        await prisma.folder.create({
-          data: {
-            name: name,
-            userId: userId,
-          },
-        });
-      }
-    }
+    await prisma.folder.create({
+      data: {
+        name: name,
+        userId: userId,
+        parentId: Number(parentId),
+        type: "FOLDER",
+      },
+    });
+  }
+
+  async addDrive(name, userId) {
+    await prisma.folder.create({
+      data: {
+        name: name,
+        userId: userId,
+        type: "FOLDER",
+      },
+    });
   }
 
   async viewAllFolders(userId) {
@@ -34,17 +34,20 @@ class FileQueries {
         children: true,
       },
     });
-    console.dir(folders, { depth: null });
     return folders;
   }
 
   async viewFolder(id, userId) {
+    console.log(id);
     const folder = await prisma.folder.findUnique({
       where: { id: Number(id), userId: userId },
       include: {
         children: true,
+        files: true,
       },
     });
+
+    console.log(folder);
     return folder;
   }
 
@@ -54,6 +57,7 @@ class FileQueries {
         name: file.originalname,
         folderId: Number(folderId),
         userId: userId,
+        type: "FILE",
       },
     });
   }
@@ -66,6 +70,25 @@ class FileQueries {
       },
     });
     return files;
+  }
+
+  async getPath(id, userId) {
+    const paths = [];
+    let parentId = id;
+
+    while (parentId !== null) {
+      const folder = await prisma.folder.findUnique({
+        where: {
+          userId: userId,
+          id: Number(parentId),
+        },
+      });
+      paths.unshift({ name: folder.name, id: folder.id });
+
+      parentId = folder.parentId;
+    }
+
+    return paths;
   }
 }
 
