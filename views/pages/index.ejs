@@ -10,12 +10,18 @@
 
     <% if (locals.currentUser) {%>
     <h1><%= currentUser.fullname%></h1>
-    <form action="/profile" method="post" enctype="multipart/form-data">
-      <input type="file" name="avatar" required />
-      <button type="submit">submit</button>
+
+    <form action="/addFolder/null" method="post">
+      <label for="foldername">Add Folder</label>
+      <input type="text" name="foldername" id="foldername" />
+      <button type="submit">Add</button>
     </form>
+
+    <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
+    <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
+    <% }) %> <% } %>
     <a href="/logout">Logout</a>
-    <% } else{ %>
+    <% } else { %>
     <h1>Please Login First</h1>
     <a href="/login">Login</a>
     <a href="/signup">Signup</a>
