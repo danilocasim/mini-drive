@@ -1,5 +1,12 @@
+const db = require("../prisma/queries/FileQueries");
+
 module.exports.renderHome = async (req, res) => {
-  res.render("pages/index.ejs");
+  if (req.user) {
+    const { id } = req.user;
+    const folders = await db.viewAllFolders(id);
+
+    res.render("pages/index.ejs", { folders: folders });
+  } else res.render("pages/index.ejs");
 };
 
 module.exports.renderSignup = async (req, res) => {
