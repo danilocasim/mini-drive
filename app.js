@@ -11,6 +11,7 @@ const indexRouter = require("./routes/indexRouter");
 const userRouter = require("./routes/userRouter");
 
 const path = require("path");
+const fileRouter = require("./routes/fileRouter");
 const app = express();
 
 app.set("views", path.join(__dirname, "views"));
@@ -44,6 +45,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/", userRouter);
+app.use("/", fileRouter);
 
 const { PORT } = process.env;
 app.listen(PORT, (err) => {
