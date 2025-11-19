@@ -25,22 +25,31 @@ model User {
 }
 
 model Folder {
-  id       Int    @id @default(autoincrement())
-  name     String
-  files    File[]
-  user     User   @relation(fields: [userId], references: [id])
-  userId   Int
-  parentId Int?
+  id         Int      @id @default(autoincrement())
+  name       String
+  files      File[]
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  parentId   Int?
+  uploadDate DateTime @default(now())
+  type       Type
 
   folder   Folder?  @relation("ChildrenFolder", fields: [parentId], references: [id])
   children Folder[] @relation("ChildrenFolder")
 }
 
 model File {
-  id           Int     @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
-  parentFolder Folder? @relation(fields: [folderId], references: [id])
+  parentFolder Folder?  @relation(fields: [folderId], references: [id])
   folderId     Int?
-  user         User    @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
   userId       Int
+  uploadDate   DateTime @default(now())
+  type         Type
+}
+
+enum Type {
+  FOLDER
+  FILE
 }
