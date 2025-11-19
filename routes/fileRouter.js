@@ -19,5 +19,6 @@ fileRouter.post("/addFolder/:folderid", file.addFolder);
 
 fileRouter.get("/folder/:folderid", file.viewFolder);
 
+fileRouter.post("/addDrive", file.addDrive);
 fileRouter.post("/addFile/:folderid", upload.single("avatar"), file.addFile);
 module.exports = fileRouter;

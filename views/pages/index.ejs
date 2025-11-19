@@ -6,12 +6,12 @@
     <title>Homepage</title>
   </head>
   <body>
-    <h1>Homepage</h1>
-
     <% if (locals.currentUser) {%>
+    <a href="/"><%= currentUser.fullname %></a>
+
     <h1><%= currentUser.fullname%></h1>
 
-    <form action="/addFolder/null" method="post">
+    <form action="/addDrive" method="post">
       <label for="foldername">Add Folder</label>
       <input type="text" name="foldername" id="foldername" />
       <button type="submit">Add</button>
