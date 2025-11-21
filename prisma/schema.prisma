@@ -34,7 +34,7 @@ model Folder {
   created_at DateTime @default(now())
   type       Type
 
-  folder   Folder?  @relation("ChildrenFolder", fields: [parentId], references: [id])
+  folder   Folder?  @relation("ChildrenFolder", fields: [parentId], references: [id], onDelete: Cascade)
   children Folder[] @relation("ChildrenFolder")
 }
 
