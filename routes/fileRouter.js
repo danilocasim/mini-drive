@@ -3,9 +3,6 @@ const file = require("../controller/fileController");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
-  },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
@@ -18,6 +15,8 @@ const fileRouter = Router();
 fileRouter.post("/addFolder/:folderid", file.addFolder);
 
 fileRouter.get("/folder/:folderid", file.viewFolder);
+fileRouter.post("/deleteFolder/:userid/:folderid", file.deleteFolder);
+fileRouter.post("/deleteFile/:userid/:fileid", file.deleteFile);
 
 fileRouter.post("/addDrive", file.addDrive);
 fileRouter.post("/addFile/:folderid", upload.single("avatar"), file.addFile);
