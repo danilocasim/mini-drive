@@ -1,6 +1,14 @@
 const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("../../generated/prisma");
-const prisma = new PrismaClient();
+require("dotenv").config();
+const prisma = new PrismaClient({
+  datasources: { db: { url: process.env.DATABASE_URL } },
+});
+
+const { createClient } = require("@supabase/supabase-js");
+const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 class FileQueries {
   async addFolder(name, parentId = null, userId) {
@@ -37,6 +45,54 @@ class FileQueries {
     return folders;
   }
 
+  async deleteFolder(id, userId) {
+    const files = await prisma.file.findMany({
+      where: {
+        folderId: Number(id),
+        userId: userId,
+      },
+    });
+
+    const filePaths = files.map((file) => file.path);
+    const { data, error } = await supabase.storage
+      .from("drive")
+      .remove([filePaths]);
+
+    const deleteFolder = prisma.folder.delete({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+    const deleteFiles = prisma.file.deleteMany({
+      where: {
+        folderId: Number(id),
+        userId: userId,
+      },
+    });
+
+    const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
+  }
+
+  async deleteFile(id, userId) {
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+
+    const { data, error } = await supabase.storage
+      .from("drive")
+      .remove([file.path]);
+
+    const deleteFile = await prisma.file.delete({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+  }
   async viewFolder(id, userId) {
     console.log(id);
     const folder = await prisma.folder.findUnique({
@@ -51,10 +107,11 @@ class FileQueries {
     return folder;
   }
 
-  async addFile(file, folderId = 0, userId) {
+  async addFile(path, name, folderId = 0, userId) {
     await prisma.file.create({
       data: {
-        name: file.originalname,
+        path: path,
+        name: name,
         folderId: Number(folderId),
         userId: userId,
         type: "FILE",
