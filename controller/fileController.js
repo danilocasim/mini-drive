@@ -41,6 +41,16 @@ module.exports.deleteFile = async (req, res) => {
   res.redirect("/");
 };
 
+module.exports.renameFolder = async (req, res) => {
+  const { folderid } = req.params;
+  const { id } = req.user;
+  const { newname } = req.body;
+
+  await db.renameFolder(folderid, newname, id);
+
+  res.redirect(`/`);
+};
+
 module.exports.viewFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;
