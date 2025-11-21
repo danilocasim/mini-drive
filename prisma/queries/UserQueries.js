@@ -22,12 +22,12 @@ class UserQueries {
     return user;
   }
 
-  async addUser({ fullname, email, password }) {
+  async addUser({ username, email, password }) {
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    console.log({ username, email, password });
     await prisma.user.create({
       data: {
-        fullname: fullname,
+        username: username,
         email: email,
         password: hashedPassword,
       },
