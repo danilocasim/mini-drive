@@ -1,10 +1,15 @@
 const db = require("../prisma/queries/FileQueries");
+require("dotenv").config();
+
+const { createClient } = require("@supabase/supabase-js");
+const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports.addFolder = async (req, res) => {
   const { foldername } = req.body;
   const { folderid } = req.params;
   const { id } = req.user;
-  console.log(folderid);
 
   await db.addFolder(foldername, folderid, id);
 
@@ -20,6 +25,22 @@ module.exports.addDrive = async (req, res) => {
   return res.redirect("/");
 };
 
+module.exports.deleteFolder = async (req, res) => {
+  const { folderid } = req.params;
+  const { id } = req.user;
+
+  await db.deleteFolder(folderid, id);
+  res.redirect("/");
+};
+
+module.exports.deleteFile = async (req, res) => {
+  const { fileid } = req.params;
+  const { id } = req.user;
+
+  await db.deleteFile(fileid, id);
+  res.redirect("/");
+};
+
 module.exports.viewFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;
@@ -27,10 +48,9 @@ module.exports.viewFolder = async (req, res) => {
 
   const storedFilesSorted = folder.children
     .concat(folder.files)
-    .sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   const paths = await db.getPath(folderid, id);
-
   res.render("pages/viewFolder", {
     folder: folder,
     storage: storedFilesSorted,
@@ -40,16 +60,13 @@ module.exports.viewFolder = async (req, res) => {
 
 // FIX
 module.exports.addFile = async (req, res, next) => {
-  require("dotenv").config();
-  const { createClient } = require("@supabase/supabase-js");
-
-  const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
-  const supabaseKey = process.env.SUPABASE_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
+  const { folderid } = req.params;
+  const { username, id } = req.user;
+  const { originalname } = req.file;
+  const path = `${username}/${folderid}/${originalname}`;
   supabase.storage
-    .from("obj")
-    .upload("public/avatar1.pdf", req.file, {
+    .from("drive")
+    .upload(path, req.file, {
       cacheControl: "3600",
       upsert: false,
     })
@@ -57,17 +74,7 @@ module.exports.addFile = async (req, res, next) => {
       console.log(data);
     });
 
-  supabase.storage
-    .from("obj")
-    .list()
-    .then((data) => {
-      console.log(data);
-    });
-  console.log(req.file);
-
-  const { folderid } = req.params;
-  const { id } = req.user;
-  await db.addFile(req.file, folderid, id);
+  await db.addFile(path, originalname, folderid, id);
 
   res.redirect("/folder/" + folderid);
 };
