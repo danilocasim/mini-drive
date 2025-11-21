@@ -45,6 +45,18 @@ class FileQueries {
     return folders;
   }
 
+  async renameFolder(id, name, userId) {
+    await prisma.folder.update({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+      data: {
+        name: name,
+      },
+    });
+  }
+
   async deleteFolder(id, userId) {
     const files = await prisma.file.findMany({
       where: {
@@ -54,6 +66,7 @@ class FileQueries {
     });
 
     const filePaths = files.map((file) => file.path);
+
     const { data, error } = await supabase.storage
       .from("drive")
       .remove([filePaths]);
@@ -64,13 +77,14 @@ class FileQueries {
         userId: userId,
       },
     });
+
     const deleteFiles = prisma.file.deleteMany({
       where: {
         folderId: Number(id),
         userId: userId,
       },
     });
-
+    r;
     const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
   }
 
