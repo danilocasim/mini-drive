@@ -9,7 +9,7 @@
     <% if(locals.folder) { %>
 
       <% if (locals.paths)  {%>
-        <a href="/"><%= currentUser.fullname %></a>
+        <a href="/"><%= currentUser.username %></a>
         <% paths.forEach((path) => { %>
         <a href="/folder/<%= path.id  %>"><%= path.name %></a>
         <% }) %>
@@ -34,9 +34,15 @@
       <% if (folder.type === "FOLDER") {%>
     <a href="/folder/<%= folder.id  %>"><button>
       <%= folder.name %></a></button>
+      <form action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>" method="post">
+        <button type="submit">DELETE</button>
+      </form>
       <% } %>
      <% if (folder.type === "FILE") {%>
       <p><%= folder.name  %></p>
+       <form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
+        <button type="submit">DELETE</button>
+      </form>
       <% } %>
     <% }) %> 
     <% } %>

@@ -7,9 +7,9 @@
   </head>
   <body>
     <% if (locals.currentUser) {%>
-    <a href="/"><%= currentUser.fullname %></a>
+    <a href="/"><%= currentUser.username %></a>
 
-    <h1><%= currentUser.fullname%></h1>
+    <h1><%= currentUser.username%></h1>
 
     <form action="/addDrive" method="post">
       <label for="foldername">Add Folder</label>
@@ -19,6 +19,12 @@
 
     <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
     <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
+    <form
+      action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <button type="submit">DELETE</button>
+    </form>
     <% }) %> <% } %>
     <a href="/logout">Logout</a>
     <% } else { %>
