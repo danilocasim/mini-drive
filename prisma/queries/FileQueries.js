@@ -84,7 +84,6 @@ class FileQueries {
         userId: userId,
       },
     });
-    r;
     const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
   }
 
