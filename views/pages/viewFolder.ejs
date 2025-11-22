@@ -50,7 +50,15 @@
       <p><%= folder.name  %></p>
        <form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
         <button type="submit">DELETE</button>
+         
       </form>
+      <form
+      action="/updateFile/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <input type="text" name="newname" id="newname" />
+      <button type="submit">Rename</button>
+    </form>
       <% } %>
     <% }) %> 
     <% } %>

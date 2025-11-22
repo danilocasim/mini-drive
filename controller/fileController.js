@@ -51,6 +51,15 @@ module.exports.renameFolder = async (req, res) => {
   res.redirect(`/`);
 };
 
+module.exports.renameFile = async (req, res) => {
+  const { fileid } = req.params;
+  const { id } = req.user;
+  const { newname } = req.body;
+
+  await db.renameFile(fileid, newname, id);
+  res.redirect("/");
+};
+
 module.exports.viewFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;

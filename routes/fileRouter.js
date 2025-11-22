@@ -18,6 +18,7 @@ fileRouter.get("/folder/:folderid", file.viewFolder);
 fileRouter.post("/deleteFolder/:userid/:folderid", file.deleteFolder);
 fileRouter.post("/deleteFile/:userid/:fileid", file.deleteFile);
 fileRouter.post("/updateFolder/:userid/:folderid", file.renameFolder);
+fileRouter.post("/updateFile/:userid/:fileid", file.renameFile);
 fileRouter.post("/addDrive", file.addDrive);
 fileRouter.post("/addFile/:folderid", upload.single("avatar"), file.addFile);
 module.exports = fileRouter;

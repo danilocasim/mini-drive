@@ -57,6 +57,35 @@ class FileQueries {
     });
   }
 
+  async renameFile(id, name, userId) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    const { data, error } = await supabase.storage
+      .from("drive")
+      .move(file.path, `${user.username}/${file.folderId}/${name}`);
+
+    await prisma.file.update({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+      data: {
+        name: name,
+        path: `${user.username}/${file.folderId}/${name}`,
+      },
+    });
+  }
+
   async deleteFolder(id, userId) {
     const files = await prisma.file.findMany({
       where: {
