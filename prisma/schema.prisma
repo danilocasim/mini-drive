@@ -27,7 +27,6 @@ model User {
 model Folder {
   id         Int      @id @default(autoincrement())
   name       String
-  files      File[]
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   parentId   Int?
@@ -36,13 +35,14 @@ model Folder {
 
   folder   Folder?  @relation("ChildrenFolder", fields: [parentId], references: [id], onDelete: Cascade)
   children Folder[] @relation("ChildrenFolder")
+  files    File[]
 }
 
 model File {
   id           Int      @id @default(autoincrement())
   path         String
   name         String
-  parentFolder Folder?  @relation(fields: [folderId], references: [id])
+  parentFolder Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId     Int?
   user         User     @relation(fields: [userId], references: [id])
   userId       Int
