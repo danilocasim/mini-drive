@@ -171,6 +171,29 @@ class FileQueries {
     return files;
   }
 
+  async viewFileDetails(id, userId) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+
+    const { data, error } = await supabase.storage
+      .from("drive")
+      .list(`${user.username}/${file.folderId}`, {
+        search: file.name,
+      });
+
+    return data;
+  }
+
   async getPath(id, userId) {
     const paths = [];
     let parentId = id;

@@ -59,6 +59,12 @@
       <input type="text" name="newname" id="newname" />
       <button type="submit">Rename</button>
     </form>
+    <form
+      action="/viewFileDetails/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <button type="submit">View File</button>
+    </form>
       <% } %>
     <% }) %> 
     <% } %>
