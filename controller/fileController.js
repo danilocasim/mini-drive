@@ -88,19 +88,11 @@ module.exports.viewFileDetails = async (req, res) => {
 module.exports.addFile = async (req, res, next) => {
   const { folderid } = req.params;
   const { username, id } = req.user;
-  const { originalname } = req.file;
-  const path = `${username}/${folderid}/${originalname}`;
-  supabase.storage
-    .from("drive")
-    .upload(path, req.file, {
-      cacheControl: "3600",
-      upsert: false,
-    })
-    .then((data) => {
-      console.log(data);
-    });
+  const file = req.file;
 
-  await db.addFile(path, originalname, folderid, id);
+  const path = `${username}/${folderid}/${file.originalname}`;
+
+  await db.addFile(path, file, folderid, id);
 
   res.redirect("/folder/" + folderid);
 };

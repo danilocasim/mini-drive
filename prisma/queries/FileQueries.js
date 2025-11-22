@@ -149,11 +149,18 @@ class FileQueries {
     return folder;
   }
 
-  async addFile(path, name, folderId = 0, userId) {
+  async addFile(path, file, folderId = 0, userId) {
+    const { data, error } = await supabase.storage
+      .from("drive")
+      .upload(path, file, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
     await prisma.file.create({
       data: {
         path: path,
-        name: name,
+        name: file.originalname,
         folderId: Number(folderId),
         userId: userId,
         type: "FILE",
