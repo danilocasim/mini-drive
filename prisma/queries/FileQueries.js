@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("../../generated/prisma");
 require("dotenv").config();
 const { getNestedFolders } = require("../../generated/prisma/sql");
@@ -142,9 +141,6 @@ class FileQueries {
     });
   }
   async viewFolder(id, userId) {
-    const nested = await prisma.$queryRawTyped(getNestedFolders(Number(id)));
-    console.log(nested);
-
     const folder = await prisma.folder.findUnique({
       where: { id: Number(id), userId: userId },
       include: {

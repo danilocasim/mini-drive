@@ -64,12 +64,22 @@ module.exports.viewFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;
   const folder = await db.viewFolder(folderid, id);
+  const paths = await db.getPath(folderid, id);
+
+  const files = folder.files.map(async (file) => {
+    const { data } = supabase.storage
+      .from("drive")
+      .getPublicUrl(file.path, { download: true });
+
+    return { ...file, downloadLink: data.publicUrl };
+  });
+
+  const returnedFiles = await Promise.all(files);
 
   const storedFilesSorted = folder.children
-    .concat(folder.files)
+    .concat(returnedFiles)
     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-  const paths = await db.getPath(folderid, id);
   res.render("pages/viewFolder", {
     folder: folder,
     storage: storedFilesSorted,
