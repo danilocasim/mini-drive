@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("../../generated/prisma");
 require("dotenv").config();
+const { getNestedFolders } = require("../../generated/prisma/sql");
+
 const prisma = new PrismaClient({
   datasources: { db: { url: process.env.DATABASE_URL } },
 });
@@ -11,12 +13,12 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 class FileQueries {
-  async addFolder(name, parentId = null, userId) {
+  async addFolder(name, parentid = null, userId) {
     await prisma.folder.create({
       data: {
         name: name,
         userId: userId,
-        parentId: Number(parentId),
+        parentid: Number(parentid),
         type: "FOLDER",
       },
     });
@@ -28,6 +30,7 @@ class FileQueries {
         name: name,
         userId: userId,
         type: "FOLDER",
+        parentid: null,
       },
     });
   }
@@ -36,7 +39,7 @@ class FileQueries {
     const folders = await prisma.folder.findMany({
       where: {
         userId: userId,
-        parentId: null,
+        parentid: null,
       },
       include: {
         children: true,
@@ -87,18 +90,21 @@ class FileQueries {
   }
 
   async deleteFolder(id, userId) {
-    const files = await prisma.file.findMany({
-      where: {
-        folderId: Number(id),
-        userId: userId,
-      },
+    const nested = await prisma.$queryRawTyped(getNestedFolders(Number(id)));
+
+    nested.forEach(async (folder) => {
+      const files = await prisma.file.findMany({
+        where: {
+          folderId: Number(folder.id),
+          userId: userId,
+        },
+      });
+      const filePaths = files.map((file) => file.path);
+
+      const { data, error } = await supabase.storage
+        .from("drive")
+        .remove([filePaths]);
     });
-
-    const filePaths = files.map((file) => file.path);
-
-    const { data, error } = await supabase.storage
-      .from("drive")
-      .remove([filePaths]);
 
     const deleteFolder = prisma.folder.delete({
       where: {
@@ -136,7 +142,9 @@ class FileQueries {
     });
   }
   async viewFolder(id, userId) {
-    console.log(id);
+    const nested = await prisma.$queryRawTyped(getNestedFolders(Number(id)));
+    console.log(nested);
+
     const folder = await prisma.folder.findUnique({
       where: { id: Number(id), userId: userId },
       include: {
@@ -145,7 +153,6 @@ class FileQueries {
       },
     });
 
-    console.log(folder);
     return folder;
   }
 
@@ -203,18 +210,18 @@ class FileQueries {
 
   async getPath(id, userId) {
     const paths = [];
-    let parentId = id;
+    let parentid = id;
 
-    while (parentId !== null) {
+    while (parentid !== null) {
       const folder = await prisma.folder.findUnique({
         where: {
           userId: userId,
-          id: Number(parentId),
+          id: Number(parentid),
         },
       });
       paths.unshift({ name: folder.name, id: folder.id });
 
-      parentId = folder.parentId;
+      parentid = folder.parentid;
     }
 
     return paths;

@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  previewFeatures = ["typedSql"]
+  output          = "../generated/prisma"
 }
 
 datasource db {
@@ -29,11 +30,11 @@ model Folder {
   name       String
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
-  parentId   Int?
+  parentid   Int?
   created_at DateTime @default(now())
   type       Type
 
-  folder   Folder?  @relation("ChildrenFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  folder   Folder?  @relation("ChildrenFolder", fields: [parentid], references: [id], onDelete: Cascade)
   children Folder[] @relation("ChildrenFolder")
   files    File[]
 }
