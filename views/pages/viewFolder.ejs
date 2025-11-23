@@ -48,7 +48,7 @@
       <% } %>
      <% if (folder.type === "FILE") {%>
       <p><%= folder.name  %></p>
-      <a href="<%= folder.downloadLink  %>" download="<%= folder.name  %>">Download</a>
+      <a href="<%= folder.downloadLink %>">Download</a>
        <form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
         <button type="submit">DELETE</button>
          

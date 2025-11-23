@@ -2,7 +2,7 @@ const { Router } = require("express");
 const file = require("../controller/fileController");
 const multer = require("multer");
 
-const storage = multer.diskStorage({
+const storage = multer.memoryStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },

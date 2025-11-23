@@ -67,10 +67,9 @@ module.exports.viewFolder = async (req, res) => {
   const paths = await db.getPath(folderid, id);
 
   const files = folder.files.map(async (file) => {
-    const { data } = supabase.storage
+    const { data } = await supabase.storage
       .from("drive")
       .getPublicUrl(file.path, { download: true });
-
     return { ...file, downloadLink: data.publicUrl };
   });
 
@@ -99,10 +98,9 @@ module.exports.addFile = async (req, res, next) => {
   const { folderid } = req.params;
   const { username, id } = req.user;
   const file = req.file;
-
   const path = `${username}/${folderid}/${file.originalname}`;
 
-  await db.addFile(path, file, folderid, id);
+  await db.addFile(path, req.file.buffer, file, folderid, id);
 
   res.redirect("/folder/" + folderid);
 };
