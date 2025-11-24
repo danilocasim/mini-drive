@@ -48,7 +48,7 @@ class FileQueries {
   }
 
   async renameFolder(id, name, userId) {
-    await prisma.folder.update({
+    return await prisma.folder.update({
       where: {
         id: Number(id),
         userId: userId,
@@ -76,7 +76,7 @@ class FileQueries {
       .from("drive")
       .move(file.path, `${user.username}/${file.folderId}/${name}`);
 
-    await prisma.file.update({
+    const renamedFile = await prisma.file.update({
       where: {
         id: Number(id),
         userId: userId,
@@ -86,6 +86,7 @@ class FileQueries {
         path: `${user.username}/${file.folderId}/${name}`,
       },
     });
+    return renamedFile;
   }
 
   async deleteFolder(id, userId) {
@@ -105,20 +106,20 @@ class FileQueries {
         .remove([filePaths]);
     });
 
-    const deleteFolder = prisma.folder.delete({
+    const deleteFiles = await prisma.file.deleteMany({
+      where: {
+        folderId: Number(id),
+        userId: userId,
+      },
+    });
+    const deleteFolder = await prisma.folder.delete({
       where: {
         id: Number(id),
         userId: userId,
       },
     });
 
-    const deleteFiles = prisma.file.deleteMany({
-      where: {
-        folderId: Number(id),
-        userId: userId,
-      },
-    });
-    const transaction = await prisma.$transaction([deleteFiles, deleteFolder]);
+    return deleteFolder;
   }
 
   async deleteFile(id, userId) {
@@ -139,6 +140,8 @@ class FileQueries {
         userId: userId,
       },
     });
+
+    return deleteFile;
   }
   async viewFolder(id, userId) {
     const folder = await prisma.folder.findUnique({

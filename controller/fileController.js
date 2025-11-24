@@ -1,10 +1,5 @@
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
-const { PrismaClient } = require("../generated/prisma");
-
-const prisma = new PrismaClient({
-  datasources: { db: { url: process.env.DATABASE_URL } },
-});
 
 const { createClient } = require("@supabase/supabase-js");
 const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
@@ -34,14 +29,7 @@ module.exports.deleteFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;
 
-  const deletedFolder = await prisma.folder.findUnique({
-    where: {
-      id: Number(folderid),
-    },
-  });
-  console.log(deletedFolder);
-
-  await db.deleteFolder(folderid, id);
+  const deletedFolder = await db.deleteFolder(folderid, id);
   res.redirect(`/folder/${deletedFolder.parentid}`);
 };
 
@@ -49,8 +37,8 @@ module.exports.deleteFile = async (req, res) => {
   const { fileid } = req.params;
   const { id } = req.user;
 
-  await db.deleteFile(fileid, id);
-  res.redirect("/");
+  const deletedFile = await db.deleteFile(fileid, id);
+  res.redirect(`/folder/${deletedFile.folderId}`);
 };
 
 module.exports.renameFolder = async (req, res) => {
@@ -58,9 +46,9 @@ module.exports.renameFolder = async (req, res) => {
   const { id } = req.user;
   const { newname } = req.body;
 
-  await db.renameFolder(folderid, newname, id);
+  const folder = await db.renameFolder(folderid, newname, id);
 
-  res.redirect(`/`);
+  res.redirect(`/folder/${folder.parentid}`);
 };
 
 module.exports.renameFile = async (req, res) => {
@@ -68,8 +56,8 @@ module.exports.renameFile = async (req, res) => {
   const { id } = req.user;
   const { newname } = req.body;
 
-  await db.renameFile(fileid, newname, id);
-  res.redirect("/");
+  const renamedFile = await db.renameFile(fileid, newname, id);
+  res.redirect(`/folder/${renamedFile.folderId}`);
 };
 
 module.exports.viewFolder = async (req, res) => {
