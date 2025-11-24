@@ -161,7 +161,6 @@ class FileQueries {
         upsert: true,
       });
 
-    console.log(fileDetails);
     await prisma.file.create({
       data: {
         path: path,

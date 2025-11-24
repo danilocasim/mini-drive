@@ -1,5 +1,10 @@
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
+const { PrismaClient } = require("../generated/prisma");
+
+const prisma = new PrismaClient({
+  datasources: { db: { url: process.env.DATABASE_URL } },
+});
 
 const { createClient } = require("@supabase/supabase-js");
 const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
@@ -29,8 +34,15 @@ module.exports.deleteFolder = async (req, res) => {
   const { folderid } = req.params;
   const { id } = req.user;
 
+  const deletedFolder = await prisma.folder.findUnique({
+    where: {
+      id: Number(folderid),
+    },
+  });
+  console.log(deletedFolder);
+
   await db.deleteFolder(folderid, id);
-  res.redirect("/");
+  res.redirect(`/folder/${deletedFolder.parentid}`);
 };
 
 module.exports.deleteFile = async (req, res) => {
