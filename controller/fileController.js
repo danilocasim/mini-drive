@@ -1,11 +1,6 @@
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
 
-const { createClient } = require("@supabase/supabase-js");
-const supabaseUrl = "https://dmtrxkgcngebdqurydeg.supabase.co";
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 module.exports.addFolder = async (req, res) => {
   const { foldername } = req.body;
   const { folderid } = req.params;
@@ -66,17 +61,10 @@ module.exports.viewFolder = async (req, res) => {
   const folder = await db.viewFolder(folderid, id);
   const paths = await db.getPath(folderid, id);
 
-  const files = folder.files.map(async (file) => {
-    const { data } = await supabase.storage
-      .from("drive")
-      .getPublicUrl(file.path, { download: true });
-    return { ...file, downloadLink: data.publicUrl };
-  });
-
-  const returnedFiles = await Promise.all(files);
+  const filesWithDownloadLink = await db.getDownloadLinks(folder.files);
 
   const storedFilesSorted = folder.children
-    .concat(returnedFiles)
+    .concat(filesWithDownloadLink)
     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   res.render("pages/viewFolder", {

@@ -226,6 +226,19 @@ class FileQueries {
 
     return paths;
   }
+
+  async getDownloadLinks(files) {
+    const allFiles = files.map(async (file) => {
+      const { data } = await supabase.storage
+        .from("drive")
+        .getPublicUrl(file.path, { download: true });
+      return { ...file, downloadLink: data.publicUrl };
+    });
+
+    const returnedFiles = await Promise.all(allFiles);
+
+    return returnedFiles;
+  }
 }
 
 module.exports = new FileQueries();
