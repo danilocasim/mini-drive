@@ -7,6 +7,7 @@
   </head>
   <body>
     <form action="/signup" method="post">
+      <%- include("../components/errors.ejs") %>
       <div>
         <label for="username">Enter Username</label>
         <input id="username" type="text" name="username" required />
@@ -20,7 +21,7 @@
         <input type="password" id="password" name="password" required />
       </div>
       <div>
-        <label for="confirm_password">Enter Password</label>
+        <label for="confirm_password">Confirm Password</label>
         <input
           type="password"
           id="confirm_password"

@@ -13,6 +13,16 @@ class UserQueries {
     return user;
   }
 
+  async getUsername(username) {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    return user;
+  }
+
   async getUser(id) {
     const user = await prisma.user.findUnique({
       where: {

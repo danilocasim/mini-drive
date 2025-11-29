@@ -86,6 +86,7 @@ module.exports.addFile = async (req, res, next) => {
   const { folderid } = req.params;
   const { username, id } = req.user;
   const file = req.file;
+  console.log(file);
   const path = `${username}/${folderid}/${file.originalname}`;
 
   await db.addFile(path, req.file.buffer, file, folderid, id);
