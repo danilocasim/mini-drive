@@ -8,7 +8,9 @@ const storage = multer.memoryStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+});
 
 const fileRouter = Router();
 

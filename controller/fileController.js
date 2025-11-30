@@ -1,5 +1,7 @@
+const uploadValidators = require("../middleware/validators/uploadValidators");
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
+const { validationResult, matchedData } = require("express-validator");
 
 module.exports.addFolder = async (req, res) => {
   const { foldername } = req.body;
@@ -82,14 +84,34 @@ module.exports.viewFileDetails = async (req, res) => {
   res.render("pages/viewFileDetails", { data: fileDetails[0] });
 };
 
-module.exports.addFile = async (req, res, next) => {
-  const { folderid } = req.params;
-  const { username, id } = req.user;
-  const file = req.file;
-  console.log(file);
-  const path = `${username}/${folderid}/${file.originalname}`;
+module.exports.addFile = [
+  uploadValidators,
+  async (req, res, next) => {
+    const errors = validationResult(req);
 
-  await db.addFile(path, req.file.buffer, file, folderid, id);
+    const { folderid } = req.params;
+    const { username, id } = req.user;
+    const file = req.file;
 
-  res.redirect("/folder/" + folderid);
-};
+    if (!errors.isEmpty()) {
+      const folder = await db.viewFolder(folderid, id);
+      const paths = await db.getPath(folderid, id);
+      const filesWithDownloadLink = await db.getDownloadLinks(folder.files);
+      const storedFilesSorted = folder.children
+        .concat(filesWithDownloadLink)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      return res.status(400).render("../views/pages/viewFolder", {
+        folder: folder,
+        storage: storedFilesSorted,
+        paths: paths,
+        errors: errors.array(),
+      });
+    }
+
+    const path = `${username}/${folderid}/${file.originalname}`;
+
+    await db.addFile(path, file.buffer, file, folderid, id);
+
+    res.redirect("/folder/" + folderid);
+  },
+];

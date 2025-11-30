@@ -17,9 +17,11 @@
 
     <form action="/addFolder/<%= folder.id  %>" method="post">
       <label for="foldername">Add Folder</label>
-      <input type="text" name="foldername" id="foldername" />
+      <input type="text" name="foldername" id="foldername" required/>
       <button type="submit">Add</button>
     </form>
+    <!-- ADD VALIDATOR FOR SIZE 1000000 byte 1mn -->
+     <%- include("../components/errors.ejs")  %>
     <form
       action="/addFile/<%= folder.id  %>"
       method="post"
@@ -28,7 +30,7 @@
       <input type="file" name="avatar" required />
       <button type="submit">submit</button>
     </form>
-    <h1><%= folder.name %></h1>
+    <h1><%= folder.name %> </h1>
 
     <% if (locals.storage){ %> <% storage.forEach((folder) => { %>
       <% if (folder.type === "FOLDER") {%>
