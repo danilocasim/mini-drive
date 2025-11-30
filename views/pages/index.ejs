@@ -19,6 +19,7 @@
 
     <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
     <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
+
     <form
       action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
       method="post"

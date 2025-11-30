@@ -27,7 +27,8 @@ module.exports.deleteFolder = async (req, res) => {
   const { id } = req.user;
 
   const deletedFolder = await db.deleteFolder(folderid, id);
-  res.redirect(`/folder/${deletedFolder.parentid}`);
+  if (deletedFolder.parentid) res.redirect(`/folder/${deletedFolder.parentid}`);
+  else res.redirect("/");
 };
 
 module.exports.deleteFile = async (req, res) => {
