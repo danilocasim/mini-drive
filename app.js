@@ -13,7 +13,10 @@ const userRouter = require("./routes/userRouter");
 const path = require("path");
 const fileRouter = require("./routes/fileRouter");
 const app = express();
+// app.js
 
+const assetsPath = path.join(__dirname, "public");
+app.use(express.static(assetsPath));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.json());
