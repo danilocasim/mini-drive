@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>All Drives</h1>
+  <button id="addDriveBtn">Add Drive</button>
+  <dialog id="addDriveDialog" close>
+    <form action="/addDrive" method="post">
+      <label for="foldername">Add Drive</label>
+      <input type="text" name="foldername" id="foldername" />
+      <button type="submit">Add</button>
+    </form>
+  </dialog>
+
+  <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
+  <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
+  <form
+    action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
+    method="post"
+  >
+    <button type="submit">DELETE</button>
+  </form>
+
+  <% }) %> <% } %>
+  <a href="/logout">Logout</a>
+</div>
