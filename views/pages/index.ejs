@@ -10,5 +10,7 @@
     <%- include("../components/nav.ejs") %> <% if (locals.currentUser) {%> <%-
     include("../components/authenticated-home.ejs") %> <% } else { %> <%-
     include("../components/unauthenticated-home.ejs") %> <% } %>
+
+    <script src="index.js" defer></script>
   </body>
 </html>
