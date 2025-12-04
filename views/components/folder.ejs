@@ -1,0 +1,12 @@
+  <a href="/folder/<%= folder.id  %>"><button>
+        <%= folder.name %></a></button>
+        <form action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>" method="post">
+          <button type="submit">DELETE</button>
+        </form>
+        <form
+        action="/updateFolder/<%= currentUser.id %>/<%= folder.id %>"
+        method="post"
+      >
+        <input type="text" name="newname" id="newname" />
+        <button type="submit">Rename</button>
+      </form>

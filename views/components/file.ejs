@@ -1,0 +1,15 @@
+<p><%= folder.name %></p>
+<a href="<%= folder.downloadLink %>">Download</a>
+<form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
+  <button type="submit">DELETE</button>
+</form>
+<form action="/updateFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
+  <input type="text" name="newname" id="newname" />
+  <button type="submit">Rename</button>
+</form>
+<form
+  action="/viewFileDetails/<%= currentUser.id %>/<%= folder.id %>"
+  method="post"
+>
+  <button type="submit">View File</button>
+</form>

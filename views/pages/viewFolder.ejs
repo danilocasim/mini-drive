@@ -4,76 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= locals.folder.name%></title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-
     <%- include("../components/nav.ejs") %>
-    <% if(locals.folder) { %>
-
-      <% if (locals.paths)  {%>
+    <div class="container">
+      <% if(locals.folder) { %> <% if (locals.paths) {%>
+      <div class="paths">
         <a href="/"><%= currentUser.username %></a>
         <% paths.forEach((path) => { %>
-        <a href="/folder/<%= path.id  %>"><%= path.name %></a>
+        <a href="/folder/<%= path.id  %>"> > <%= path.name %></a>
         <% }) %>
+      </div>
       <% } %>
-
-    <form action="/addFolder/<%= folder.id  %>" method="post">
-      <label for="foldername">Add Folder</label>
-      <input type="text" name="foldername" id="foldername" required/>
-      <button type="submit">Add</button>
-    </form>
-    <!-- ADD VALIDATOR FOR SIZE 1000000 byte 1mn -->
-     <%- include("../components/errors.ejs")  %>
-    <form
-      action="/addFile/<%= folder.id  %>"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <input type="file" name="avatar" required />
-      <button type="submit">submit</button>
-    </form>
-    <h1><%= folder.name %> </h1>
-
-    <% if (locals.storage){ %> <% storage.forEach((folder) => { %>
-      <% if (folder.type === "FOLDER") {%>
-    <a href="/folder/<%= folder.id  %>"><button>
-      <%= folder.name %></a></button>
-      <form action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>" method="post">
-        <button type="submit">DELETE</button>
+      <form action="/addFolder/<%= folder.id  %>" method="post">
+        <label for="foldername">Add Folder</label>
+        <input type="text" name="foldername" id="foldername" required />
+        <button type="submit">Add</button>
       </form>
-
+      <%- include("../components/errors.ejs") %>
       <form
-      action="/updateFolder/<%= currentUser.id %>/<%= folder.id %>"
-      method="post"
-    >
-      <input type="text" name="newname" id="newname" />
-      <button type="submit">Rename</button>
-    </form>
-      <% } %>
-     <% if (folder.type === "FILE") {%>
-      <p><%= folder.name  %></p>
-      <a href="<%= folder.downloadLink %>">Download</a>
-       <form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
-        <button type="submit">DELETE</button>
-         
+        action="/addFile/<%= folder.id  %>"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input type="file" name="avatar" required />
+        <button type="submit">submit</button>
       </form>
-      <form
-      action="/updateFile/<%= currentUser.id %>/<%= folder.id %>"
-      method="post"
-    >
-      <input type="text" name="newname" id="newname" />
-      <button type="submit">Rename</button>
-    </form>
-    <form
-      action="/viewFileDetails/<%= currentUser.id %>/<%= folder.id %>"
-      method="post"
-    >
-      <button type="submit">View File</button>
-    </form>
-      <% } %>
-    <% }) %> 
-    <% } %>
-     <% } %>
+      <% if (locals.storage){ %> <% storage.forEach((folder) => { %> <%
+      if(folder.type === "FOLDER") {%> <%- include("../components/folder.ejs",
+      {folder: folder}) %> <% } %> <% if (folder.type === "FILE") { %> <%-
+      include("../components/file.ejs", {folder: folder}) %> <% } %> <% }) %> <%
+      } %> <% } %>
+    </div>
   </body>
 </html>

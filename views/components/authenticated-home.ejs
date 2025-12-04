@@ -10,13 +10,17 @@
   </dialog>
 
   <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
-  <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
-  <form
-    action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
-    method="post"
+  <a href="/folder/<%= folder.id  %>"
+    ><div class="item">
+      <%= folder.name %>
+      <form
+        action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
+        method="post"
+      >
+        <button type="submit">DELETE</button>
+      </form>
+    </div></a
   >
-    <button type="submit">DELETE</button>
-  </form>
 
   <% }) %> <% } %>
   <a href="/logout">Logout</a>

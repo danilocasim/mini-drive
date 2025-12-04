@@ -3,5 +3,4 @@ const addDriveBtn = document.getElementById("addDriveBtn");
 
 addDriveBtn.addEventListener("click", () => {
   addDriveDialog.showModel();
-  console.log("S");
 });
