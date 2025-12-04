@@ -3,36 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homepage</title>
+    <title>All Drives</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <% if (locals.currentUser) {%>
-    <a href="/"><%= currentUser.username %></a>
+    <%- include("../components/nav.ejs") %> <% if (locals.currentUser) {%> <%-
+    include("../components/authenticated-home.ejs") %> <% } else { %> <%-
+    include("../components/unauthenticated-home.ejs") %> <% } %>
 
-    <h1><%= currentUser.username%></h1>
-
-    <form action="/addDrive" method="post">
-      <label for="foldername">Add Folder</label>
-      <input type="text" name="foldername" id="foldername" />
-      <button type="submit">Add</button>
-    </form>
-
-    <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
-    <a href="/folder/<%= folder.id  %>"><button><%= folder.name %></button></a>
-
-    <form
-      action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
-      method="post"
-    >
-      <button type="submit">DELETE</button>
-    </form>
-
-    <% }) %> <% } %>
-    <a href="/logout">Logout</a>
-    <% } else { %>
-    <h1>Please Login First</h1>
-    <a href="/login">Login</a>
-    <a href="/signup">Signup</a>
-    <% } %>
+    <script src="index.js" defer></script>
   </body>
 </html>

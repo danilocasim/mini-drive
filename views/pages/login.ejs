@@ -4,14 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <form action="/login" method="POST">
-      <label for="email">Enter Email</label>
-      <input type="email" id="email" name="email" required />
-      <label for="password">Enter Password</label>
-      <input type="password" id="password" name="password" required />
-      <button type="submit">Login</button>
-    </form>
+    <%- include("../components/nav.ejs") %>
+    <div class="container login-container">
+      <form action="/login" method="POST">
+        <div>
+          <label for="email">Enter Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+          <label for="password">Enter Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
   </body>
 </html>

@@ -1,0 +1,12 @@
+<nav>
+  <a href="/"><h3>All Drives</h3></a>
+
+  <ul>
+    <% if (locals.currentUser){ %>
+    <li><a href="/logout">Logout</a></li>
+    <% }else {%>
+    <li><a href="/signup">Signup</a></li>
+    <li><a href="/login">Login</a></li>
+    <% } %>
+  </ul>
+</nav>
