@@ -17,25 +17,34 @@
         <% }) %>
       </div>
       <% } %>
-      <form action="/addFolder/<%= folder.id  %>" method="post">
-        <label for="foldername">Add Folder</label>
-        <input type="text" name="foldername" id="foldername" required />
-        <button type="submit">Add</button>
-      </form>
-      <%- include("../components/errors.ejs") %>
-      <form
-        action="/addFile/<%= folder.id  %>"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <input type="file" name="avatar" required />
-        <button type="submit">submit</button>
-      </form>
+      <dialog>
+        <button class="exit-dialog">X</button>
+        <form action="/addFolder/<%= folder.id  %>" method="post">
+          <label for="foldername">Add Folder</label>
+          <input type="text" name="foldername" id="foldername" required />
+          <button type="submit">Add</button>
+        </form>
+      </dialog>
+      <button>Add Folder</button>
+      <dialog>
+        <button class="exit-dialog">X</button>
+        <%- include("../components/errors.ejs") %>
+        <form
+          action="/addFile/<%= folder.id  %>"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="avatar" required />
+          <button type="submit">submit</button>
+        </form>
+      </dialog>
+      <button>Add File</button>
       <% if (locals.storage){ %> <% storage.forEach((folder) => { %> <%
       if(folder.type === "FOLDER") {%> <%- include("../components/folder.ejs",
       {folder: folder}) %> <% } %> <% if (folder.type === "FILE") { %> <%-
       include("../components/file.ejs", {folder: folder}) %> <% } %> <% }) %> <%
       } %> <% } %>
     </div>
+    <script src="../index.js"></script>
   </body>
 </html>

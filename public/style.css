@@ -29,6 +29,16 @@ nav ul a {
   text-decoration: none;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.link {
+  color: blue;
+  text-decoration: underline;
+}
+
 .login-container form,
 .signup-container form {
   display: flex;
@@ -41,4 +51,35 @@ nav ul a {
   justify-content: space-between;
   border: 1px solid black;
   padding: 0.5rem;
+}
+
+dialog {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exit-dialog {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min-content;
+  background: transparent;
+  border: none;
+}
+
+.buttons,
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }

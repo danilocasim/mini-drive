@@ -185,6 +185,17 @@ class FileQueries {
     return files;
   }
 
+  async getFileById(id, userId) {
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(id),
+        userId: userId,
+      },
+    });
+
+    return file;
+  }
+
   async viewFileDetails(id, userId) {
     const user = await prisma.user.findUnique({
       where: {

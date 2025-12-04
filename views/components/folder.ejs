@@ -1,12 +1,30 @@
-  <a href="/folder/<%= folder.id  %>"><button>
-        <%= folder.name %></a></button>
-        <form action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>" method="post">
-          <button type="submit">DELETE</button>
-        </form>
-        <form
+<div class="item">
+  <a href="/folder/<%= folder.id  %>">
+    <div class="logo">
+      <img src="../folder-icon.svg" alt="file icon" />
+      <p><%= folder.name %></p>
+    </div>
+  </a>
+
+  <div class="buttons">
+    <dialog>
+      <button class="exit-dialog">X</button>
+      <p>Rename</p>
+      <form
         action="/updateFolder/<%= currentUser.id %>/<%= folder.id %>"
         method="post"
       >
         <input type="text" name="newname" id="newname" />
         <button type="submit">Rename</button>
       </form>
+    </dialog>
+    <div><input type="image" src="../edit.svg" /></div>
+
+    <form
+      action="/deleteFolder/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <input type="image" src="../delete.svg" />
+    </form>
+  </div>
+</div>

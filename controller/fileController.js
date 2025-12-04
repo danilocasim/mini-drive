@@ -81,8 +81,13 @@ module.exports.viewFileDetails = async (req, res) => {
   const { fileid } = req.params;
   const { id } = req.user;
 
+  const { folderId } = await db.getFileById(fileid, id);
+
   const fileDetails = await db.viewFileDetails(fileid, id);
-  res.render("pages/viewFileDetails", { data: fileDetails[0] });
+  res.render("pages/viewFileDetails", {
+    data: fileDetails[0],
+    folderId: folderId,
+  });
 };
 
 module.exports.addFile = [

@@ -1,15 +1,36 @@
-<p><%= folder.name %></p>
-<a href="<%= folder.downloadLink %>">Download</a>
-<form action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
-  <button type="submit">DELETE</button>
-</form>
-<form action="/updateFile/<%= currentUser.id %>/<%= folder.id %>" method="post">
-  <input type="text" name="newname" id="newname" />
-  <button type="submit">Rename</button>
-</form>
-<form
-  action="/viewFileDetails/<%= currentUser.id %>/<%= folder.id %>"
-  method="post"
->
-  <button type="submit">View File</button>
-</form>
+<div class="item">
+  <div class="logo">
+    <img src="../file-icon.svg" alt="file icon" />
+    <p><%= folder.name %></p>
+  </div>
+  <div class="buttons">
+    <a href="<%= folder.downloadLink %>"
+      ><input type="image" src="../download.svg"
+    /></a>
+
+    <dialog>
+      <button class="exit-dialog">X</button>
+      <p>Rename</p>
+      <form
+        action="/updateFile/<%= currentUser.id %>/<%= folder.id %>"
+        method="post"
+      >
+        <input type="text" name="newname" id="newname" />
+        <button type="submit">Rename</button>
+      </form>
+    </dialog>
+    <div><input type="image" src="../edit.svg" /></div>
+    <form
+      action="/deleteFile/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <input type="image" src="../delete.svg" />
+    </form>
+    <form
+      action="/viewFileDetails/<%= currentUser.id %>/<%= folder.id %>"
+      method="post"
+    >
+      <input type="image" src="../info.svg" />
+    </form>
+  </div>
+</div>

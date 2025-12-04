@@ -1,13 +1,14 @@
 <div class="container">
   <h1>All Drives</h1>
-  <button id="addDriveBtn">Add Drive</button>
   <dialog id="addDriveDialog" close>
     <form action="/addDrive" method="post">
+      <button type="button" class="exit-dialog">X</button>
       <label for="foldername">Add Drive</label>
       <input type="text" name="foldername" id="foldername" />
       <button type="submit">Add</button>
     </form>
   </dialog>
+  <button>Add Drive</button>
 
   <% if (locals.folders) { %> <% folders.forEach((folder) => { %>
   <a href="/folder/<%= folder.id  %>"
