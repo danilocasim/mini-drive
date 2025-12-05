@@ -179,8 +179,6 @@ module.exports.addFile = [
     const { folderid } = req.params;
     const { username, id } = req.user;
     const file = req.file;
-
-    console.log(file);
     if (!errors.isEmpty()) {
       const folder = await db.viewFolder(folderid, id);
       const paths = await db.getPath(folderid, id);
