@@ -1,5 +1,7 @@
 <div class="container">
   <h1>All Drives</h1>
+  <%- include("../components/errors.ejs") %>
+
   <dialog id="addDriveDialog" close>
     <form action="/addDrive" method="post">
       <button type="button" class="exit-dialog">X</button>

@@ -196,6 +196,17 @@ class FileQueries {
     return file;
   }
 
+  async getFolderByName(name, userId) {
+    const folder = await prisma.folder.findUnique({
+      where: {
+        name: name,
+        userId: userId,
+      },
+    });
+
+    return folder;
+  }
+
   async viewFileDetails(id, userId) {
     const user = await prisma.user.findUnique({
       where: {

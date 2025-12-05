@@ -1,26 +1,60 @@
-const uploadValidators = require("../middleware/validators/uploadValidators");
+const uploadValidators = require("../middleware/validators/uploadValidators.js");
+const folderValidators = require("../middleware/validators/folderValidators.js");
+
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
 const { validationResult, matchedData } = require("express-validator");
 
-module.exports.addFolder = async (req, res) => {
-  const { foldername } = req.body;
-  const { folderid } = req.params;
-  const { id } = req.user;
+module.exports.addFolder = [
+  folderValidators,
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  await db.addFolder(foldername, folderid, id);
+    const { foldername } = matchedData(req);
+    const { folderid } = req.params;
+    const { id } = req.user;
 
-  return res.redirect("/folder/" + folderid);
-};
+    if (!errors.isEmpty()) {
+      const folder = await db.viewFolder(folderid, id);
+      const paths = await db.getPath(folderid, id);
+      const filesWithDownloadLink = await db.getDownloadLinks(folder.files);
+      const storedFilesSorted = folder.children
+        .concat(filesWithDownloadLink)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      return res.status(400).render("../views/pages/viewFolder", {
+        folder: folder,
+        storage: storedFilesSorted,
+        paths: paths,
+        errors: errors.array(),
+      });
+    }
 
-module.exports.addDrive = async (req, res) => {
-  const { foldername } = req.body;
-  const { id } = req.user;
+    await db.addFolder(foldername, folderid, id);
 
-  await db.addDrive(foldername, id);
+    return res.redirect("/folder/" + folderid);
+  },
+];
 
-  return res.redirect("/");
-};
+module.exports.addDrive = [
+  folderValidators,
+  async (req, res) => {
+    const errors = validationResult(req);
+    const { foldername } = matchedData(req);
+    const { id } = req.user;
+    if (!errors.isEmpty()) {
+      const { id } = req.user;
+      const folders = await db.viewAllFolders(id);
+
+      return res.status(400).render("../views/pages/index", {
+        errors: errors.array(),
+        folders: folders,
+      });
+    }
+    await db.addDrive(foldername, id);
+
+    return res.redirect("/");
+  },
+];
 
 module.exports.deleteFolder = async (req, res) => {
   const { folderid } = req.params;
@@ -99,6 +133,7 @@ module.exports.addFile = [
     const { username, id } = req.user;
     const file = req.file;
 
+    console.log(file);
     if (!errors.isEmpty()) {
       const folder = await db.viewFolder(folderid, id);
       const paths = await db.getPath(folderid, id);

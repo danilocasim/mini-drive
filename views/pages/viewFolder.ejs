@@ -16,7 +16,8 @@
         <a href="/folder/<%= path.id  %>"> > <%= path.name %></a>
         <% }) %>
       </div>
-      <% } %>
+      <% } %> <%- include("../components/errors.ejs") %>
+
       <dialog>
         <button class="exit-dialog">X</button>
         <form action="/addFolder/<%= folder.id  %>" method="post">
