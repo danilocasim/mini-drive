@@ -19,7 +19,7 @@ fileRouter.post("/addFolder/:folderid", file.addFolder);
 fileRouter.get("/folder/:folderid", file.viewFolder);
 fileRouter.post("/deleteFolder/:userid/:folderid", file.deleteFolder);
 fileRouter.post("/deleteFile/:userid/:fileid", file.deleteFile);
-fileRouter.post("/updateFolder/:userid/:folderid", file.renameFolder);
+fileRouter.post("/updateFolder/:folderid", file.renameFolder);
 fileRouter.post("/updateFile/:userid/:fileid", file.renameFile);
 fileRouter.post("/viewFileDetails/:userid/:fileid", file.viewFileDetails);
 fileRouter.post("/addDrive", file.addDrive);

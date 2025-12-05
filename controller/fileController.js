@@ -38,9 +38,10 @@ module.exports.addFolder = [
 module.exports.addDrive = [
   folderValidators,
   async (req, res) => {
-    const errors = validationResult(req);
     const { foldername } = matchedData(req);
     const { id } = req.user;
+    const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       const { id } = req.user;
       const folders = await db.viewAllFolders(id);
@@ -73,15 +74,38 @@ module.exports.deleteFile = async (req, res) => {
   res.redirect(`/folder/${deletedFile.folderId}`);
 };
 
-module.exports.renameFolder = async (req, res) => {
-  const { folderid } = req.params;
-  const { id } = req.user;
-  const { newname } = req.body;
+// FIX RENAME FOLDER ALSO RENAME FILE CHECK IF IT EXIST OR OVERWRITE
+module.exports.renameFolder = [
+  folderValidators,
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  const folder = await db.renameFolder(folderid, newname, id);
+    const { folderid } = req.params;
+    const { foldername } = req.body;
 
-  res.redirect(`/folder/${folder.parentid}`);
-};
+    const { parentid } = await db.viewFolder(folderid);
+
+    if (!errors.isEmpty()) {
+      const folder = await db.viewFolder(parentid);
+      const paths = await db.getPath(parentid);
+      const filesWithDownloadLink = await db.getDownloadLinks(folder.files);
+      const storedFilesSorted = folder.children
+        .concat(filesWithDownloadLink)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      console.log(folder, storedFilesSorted, paths, errors);
+
+      return res.status(400).render("../views/pages/viewFolder", {
+        folder: folder,
+        storage: storedFilesSorted,
+        paths: paths,
+        errors: errors.array(),
+      });
+    }
+    const folder = await db.renameFolder(folderid, foldername);
+
+    res.redirect(`/folder/${folder.parentid}`);
+  },
+];
 
 module.exports.renameFile = async (req, res) => {
   const { fileid } = req.params;

@@ -47,11 +47,10 @@ class FileQueries {
     return folders;
   }
 
-  async renameFolder(id, name, userId) {
+  async renameFolder(id, name) {
     return await prisma.folder.update({
       where: {
         id: Number(id),
-        userId: userId,
       },
       data: {
         name: name,
@@ -196,8 +195,19 @@ class FileQueries {
     return file;
   }
 
+  async getFileByName(name, userId) {
+    const file = await prisma.file.findFirst({
+      where: {
+        name: name,
+        userId: userId,
+      },
+    });
+
+    return file;
+  }
+
   async getFolderByName(name, userId) {
-    const folder = await prisma.folder.findUnique({
+    const folder = await prisma.folder.findFirst({
       where: {
         name: name,
         userId: userId,
