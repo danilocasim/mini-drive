@@ -11,11 +11,8 @@
     <dialog>
       <button class="exit-dialog">X</button>
       <p>Rename</p>
-      <form
-        action="/updateFile/<%= currentUser.id %>/<%= folder.id %>"
-        method="post"
-      >
-        <input type="text" name="newname" id="newname" />
+      <form action="/updateFile/<%= folder.id %>" method="post">
+        <input type="text" name="filename" id="filename" />
         <button type="submit">Rename</button>
       </form>
     </dialog>

@@ -142,9 +142,9 @@ class FileQueries {
 
     return deleteFile;
   }
-  async viewFolder(id, userId) {
+  async viewFolder(id) {
     const folder = await prisma.folder.findUnique({
-      where: { id: Number(id), userId: userId },
+      where: { id: Number(id) },
       include: {
         children: true,
         files: true,

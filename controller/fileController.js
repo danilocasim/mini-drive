@@ -4,6 +4,7 @@ const folderValidators = require("../middleware/validators/folderValidators.js")
 const db = require("../prisma/queries/FileQueries");
 require("dotenv").config();
 const { validationResult, matchedData } = require("express-validator");
+const fileValidators = require("../middleware/validators/fileValidators.js");
 
 module.exports.addFolder = [
   folderValidators,
@@ -74,7 +75,6 @@ module.exports.deleteFile = async (req, res) => {
   res.redirect(`/folder/${deletedFile.folderId}`);
 };
 
-// FIX RENAME FOLDER ALSO RENAME FILE CHECK IF IT EXIST OR OVERWRITE
 module.exports.renameFolder = [
   folderValidators,
   async (req, res) => {
@@ -107,14 +107,37 @@ module.exports.renameFolder = [
   },
 ];
 
-module.exports.renameFile = async (req, res) => {
-  const { fileid } = req.params;
-  const { id } = req.user;
-  const { newname } = req.body;
+module.exports.renameFile = [
+  fileValidators,
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  const renamedFile = await db.renameFile(fileid, newname, id);
-  res.redirect(`/folder/${renamedFile.folderId}`);
-};
+    const { fileid } = req.params;
+    const { id } = req.user;
+    const { filename } = req.body;
+
+    const file = await db.getFileByName(filename);
+
+    if (!errors.isEmpty()) {
+      const folder = await db.viewFolder(file.folderId);
+      const paths = await db.getPath(file.folderId);
+      const filesWithDownloadLink = await db.getDownloadLinks(folder.files);
+      const storedFilesSorted = folder.children
+        .concat(filesWithDownloadLink)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      console.log(folder, storedFilesSorted, paths, errors);
+
+      return res.status(400).render("../views/pages/viewFolder", {
+        folder: folder,
+        storage: storedFilesSorted,
+        paths: paths,
+        errors: errors.array(),
+      });
+    }
+    const renamedFile = await db.renameFile(fileid, filename, id);
+    res.redirect(`/folder/${renamedFile.folderId}`);
+  },
+];
 
 module.exports.viewFolder = async (req, res) => {
   const { folderid } = req.params;
