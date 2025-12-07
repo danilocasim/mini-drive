@@ -115,8 +115,8 @@ module.exports.renameFile = [
     const { fileid } = req.params;
     const { id } = req.user;
     const { filename } = req.body;
-
-    const file = await db.getFileByName(filename);
+    const { folderId } = await db.getFileById(fileid);
+    const file = await db.getFileByName(filename, folderId);
 
     if (!errors.isEmpty()) {
       const folder = await db.viewFolder(file.folderId);

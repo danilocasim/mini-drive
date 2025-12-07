@@ -13,13 +13,14 @@ const uploadValidators = [
       if (req.file.originalname.length >= 20) {
         throw new Error("Name is too large");
       } else true;
+    })
+    .custom(async (value, { req }) => {
+      const { originalname } = req.file;
+      const { folderid } = req.params;
+      const file = await db.getFileByName(originalname, folderid);
+      if (file) throw new Error("This file already exists!");
+      else return true;
     }),
-  body("filename").custom(async (value, { req }) => {
-    const { folderid } = req.params;
-    const folder = await db.getFileByName(value, folderid);
-    if (folder) throw new Error("This file already exists!");
-    else return true;
-  }),
 ];
 
 module.exports = uploadValidators;
