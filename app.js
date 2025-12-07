@@ -50,7 +50,7 @@ app.use("/", indexRouter);
 app.use("/", userRouter);
 app.use("/", fileRouter);
 
-const { PORT } = process.env;
+const { PORT } = process.env || 7000;
 app.listen(PORT, (err) => {
   if (err) throw err;
   else console.log(`the server is running at http://localhost:${PORT}`);
