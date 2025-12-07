@@ -195,11 +195,11 @@ class FileQueries {
     return file;
   }
 
-  async getFileByName(name, userId) {
+  async getFileByName(name, folderId = 0) {
     const file = await prisma.file.findFirst({
       where: {
         name: name,
-        userId: userId,
+        folderId: Number(folderId),
       },
     });
 
