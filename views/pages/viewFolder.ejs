@@ -18,28 +18,31 @@
       </div>
       <% } %> <%- include("../components/errors.ejs") %>
 
-      <dialog>
-        <button class="exit-dialog">X</button>
-        <form action="/addFolder/<%= folder.id  %>" method="post">
-          <label for="foldername">Add Folder</label>
-          <input type="text" name="foldername" id="foldername" required />
-          <button type="submit">Add</button>
-        </form>
-      </dialog>
-      <button>Add Folder</button>
-      <dialog>
-        <button class="exit-dialog">X</button>
-        <%- include("../components/errors.ejs") %>
-        <form
-          action="/addFile/<%= folder.id  %>"
-          method="post"
-          enctype="multipart/form-data"
-        >
-          <input type="file" name="avatar" required />
-          <button type="submit">submit</button>
-        </form>
-      </dialog>
-      <button>Add File</button>
+      <div class="dialogs-btn">
+        <dialog>
+          <button class="exit-dialog">X</button>
+          <form action="/addFolder/<%= folder.id  %>" method="post">
+            <label for="foldername">Add Folder</label>
+            <input type="text" name="foldername" id="foldername" required />
+            <button type="submit">Add</button>
+          </form>
+        </dialog>
+        <button>Add Folder</button>
+        <dialog>
+          <button class="exit-dialog">X</button>
+          <%- include("../components/errors.ejs") %>
+          <form
+            action="/addFile/<%= folder.id  %>"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <label for="avatar">Add File</label>
+            <input type="file" name="avatar" id="avatar" required />
+            <button type="submit">submit</button>
+          </form>
+        </dialog>
+        <button>Add File</button>
+      </div>
       <% if (locals.storage){ %> <% storage.forEach((folder) => { %> <%
       if(folder.type === "FOLDER") {%> <%- include("../components/folder.ejs",
       {folder: folder}) %> <% } %> <% if (folder.type === "FILE") { %> <%-

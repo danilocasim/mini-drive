@@ -184,11 +184,10 @@ class FileQueries {
     return files;
   }
 
-  async getFileById(id, userId) {
+  async getFileById(id) {
     const file = await prisma.file.findUnique({
       where: {
         id: Number(id),
-        userId: userId,
       },
     });
 
@@ -218,19 +217,17 @@ class FileQueries {
   }
 
   async viewFileDetails(id, userId) {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
     const file = await prisma.file.findUnique({
       where: {
         id: Number(id),
-        userId: userId,
       },
     });
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: file.userId,
+      },
+    });
     const { data, error } = await supabase.storage
       .from("drive")
       .list(`${user.username}/${file.folderId}`, {

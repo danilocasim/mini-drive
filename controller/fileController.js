@@ -160,11 +160,10 @@ module.exports.viewFolder = async (req, res) => {
 
 module.exports.viewFileDetails = async (req, res) => {
   const { fileid } = req.params;
-  const { id } = req.user;
 
-  const { folderId } = await db.getFileById(fileid, id);
+  const { folderId } = await db.getFileById(fileid);
 
-  const fileDetails = await db.viewFileDetails(fileid, id);
+  const fileDetails = await db.viewFileDetails(fileid);
   res.render("pages/viewFileDetails", {
     data: fileDetails[0],
     folderId: folderId,
