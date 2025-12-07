@@ -1,12 +1,31 @@
 @import url("./reset.css");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+body,
+.logo a {
+  color: #444746;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+}
 
 nav {
   display: flex;
   justify-content: space-between;
-  background-color: rgb(131, 121, 121);
+  background-color: rgb(255, 255, 255);
+  border-bottom: 2px solid black;
   height: 65px;
   align-items: center;
   padding: 0 2rem;
+}
+
+a {
+  text-decoration: none;
+  color: #444746;
+}
+
+.logo img {
+  height: auto;
+  width: 30px;
 }
 
 .container {
@@ -15,6 +34,7 @@ nav {
   gap: 1rem;
   padding: 2rem;
   min-height: calc(100vh - 65px);
+  background-color: rgb(235, 231, 231);
 }
 
 nav ul {
@@ -26,12 +46,6 @@ nav ul {
 
 nav ul a {
   color: white;
-  text-decoration: none;
-}
-
-a {
-  text-decoration: none;
-  color: black;
 }
 
 .link {
@@ -49,8 +63,9 @@ a {
 .item {
   display: flex;
   justify-content: space-between;
-  border: 1px solid black;
+  align-items: center;
   padding: 0.5rem;
+  border: 1px solid black;
 }
 
 dialog {
@@ -82,4 +97,18 @@ dialog form {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+button,
+.item,
+input {
+  background-color: #fff;
+  padding: 5px;
+}
+.paths a {
+  color: rgb(23, 105, 247);
+}
+
+.paths a:last-child {
+  color: gray;
 }
