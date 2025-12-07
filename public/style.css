@@ -136,6 +136,10 @@ button {
   width: 100%;
 }
 
+.exit-dialog {
+  color: #444746;
+}
+
 @media screen and (min-width: 700px) {
   .container,
   nav {
@@ -166,10 +170,10 @@ button {
     gap: 1rem;
   }
 
-  .dialogs-btn button,
+  /* .dialogs-btn button,
   button {
     width: 15rem;
-  }
+  } */
 
   dialog {
     width: 40rem;
